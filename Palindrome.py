@@ -1,40 +1,36 @@
-class PalindromeChecker:
-    def __init__(self):
-        self.stack = []
-        self.queue = []
+from queue import Queue
 
-    def pushCharacter(self, ch):
-        self.stack.append(ch)
+def is_palindrome(text: str) -> bool:
+    # Simplified cleaning: keep alphanumerics and lowercase everything
+    cleaned = ''.join([char.lower() for char in text if char.isalnum()])
 
-    def enqueueCharacter(self, ch):
-        self.queue.append(ch)
+    stack = []
+    queue = Queue()
 
-    def popCharacter(self):
-        return self.stack.pop()
+    for char in cleaned:
+        stack.append(char)
+        queue.put(char)
 
-    def dequeueCharacter(self):
-        return self.queue.pop(0)
+    for _ in range(len(cleaned) // 2):
+        if stack.pop() != queue.get():
+            return False
 
+    return True
 
-#input
-s = input("Enter a string: ")
-obj = PalindromeChecker()
+# Example usage
+if __name__ == "_main_":
+    s = input("Input a word or sentence: ").strip()
+    if is_palindrome(s):
+        print(f"The input, '{s}', is a palindrome.")
+    else:
+        print(f"The input, '{s}', is not a palindrome.")
+test_cases = [
+    "racecar",
+    "hello",
+    "A man, a plan, a canal, Panama",
+    "Was it a car or a cat I saw?",
+    "No lemon, no melon"
+]
 
-#Push and enqueue characters
-for ch in s:
-    obj.pushCharacter(ch)
-    obj.enqueueCharacter(ch)
-
-#Compare characters from stack and queue
-is_palindrome = True
-for i in range(len(s) // 2):
-    if obj.popCharacter() != obj.dequeueCharacter():
-        is_palindrome = False
-        break
-
-
-#Output result
-if is_palindrome:
-    print(f"The word, {s}, is a palindrome.")
-else:
-    print(f"The word, {s}, is not a palindrome.")
+for text in test_cases:
+    print(f"'{text}': {is_palindrome(text)}")
